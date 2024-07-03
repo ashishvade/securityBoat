@@ -4,7 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 require('dotenv').config();
-var indexRouter = require('./routes/index');
+// var indexRouter = require('./routes/index');
 var mongo = require("./config/mongo.utility");
 const cors = require("cors");
 
@@ -22,7 +22,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(cors());
 
-app.use('/v1', indexRouter);
+// app.use('/v1', indexRouter);
 app.use(function (req, res, next) {
   res.status(404).json({
     status: 404, message: "Not Found",
