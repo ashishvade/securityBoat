@@ -10,9 +10,10 @@ class clsMovie {
             let {
                 movieTitle,
                 movieHr,
+                genre,
                 moviePrice,
                 movieBannerImg,
-                showtime,
+                showtimes,
             } = req.body;
 
             let movieId = "MOVIE_" + new Date().getTime();
@@ -27,12 +28,13 @@ class clsMovie {
             else {
 
                 let moviePost = new movieModel({
-                 movieId:movieId,
-                movieTitle,
-                movieHr,
-                moviePrice,
-                movieBannerImg,
-                showtime,
+                    movieId:movieId  ,
+                    movieTitle,
+                    movieHr,
+                    genre,
+                    moviePrice,
+                    movieBannerImg,
+                    showtimes,
                 });
 
                 let movieRes = await moviePost.save();
@@ -55,12 +57,12 @@ class clsMovie {
         try {
             if (Object.keys(req.body).length) {
                 let {
-                    movieId,
                     movieTitle,
                     movieHr,
+                    genre,
                     moviePrice,
                     movieBannerImg,
-                    showtime,
+                    showtimes,
                 } = req.body;
 
                 const updatedMovie = await movieModel.findOneAndUpdate(
@@ -69,9 +71,10 @@ class clsMovie {
                         $set: {
                             movieTitle:String(movieTitle).trim(),
                             movieHr:String(movieHr).trim(),
+                            genre:String(genre).trim(),
                             moviePrice:String(moviePrice).trim(),
                             movieBannerImg:String(movieBannerImg).trim(),
-                            showtime:String(showtime).trim(),
+                    showtimes:String(showtimes).trim(),
                         }
                     },
                     { new: true });
@@ -242,4 +245,4 @@ class clsMovie {
 
 }
 
-module.exports = clsMovie;
+module.exports =new clsMovie();

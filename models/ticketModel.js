@@ -9,17 +9,29 @@ const ticketSchema = new Schema({
     seatNo:{
         type: Number,  
     },
-    seatBook:{
-        type: Boolean,
-        trim: false
+    seatId:{
+        type:String,
+        trim: true
+    },
+    userId:{
+        type:String,
+        trim: true
+    },
+    movieId:{
+        type:String,
+        trim: true
     },
     totalPrice:{
-        type: Boolean,
+        type: Number,
         default: false
     },
     isPayment:{
         type: Boolean,
         default: false
+    },
+    showtime:{
+        type:String,
+        trim: true
     },
     isDelete: {
         type: Boolean,

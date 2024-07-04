@@ -14,13 +14,18 @@ const seatsSchema = new Schema({
         type: String,
         trim: true
     },
-    scrrenNo:{
-
+    showtimes:{
+        type: String,
+        trim: true
     },
+  screenNo: { type:Number, required: true },
+
     isDelete: {
         type: Boolean,
         default: false
     },
+
+    isBooked: { type: Boolean, default: false },
 },
     {
         timestamps: true

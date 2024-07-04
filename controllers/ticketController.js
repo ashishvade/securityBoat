@@ -1,43 +1,65 @@
 const ticketModel = require("../models/ticketModel");
 const apiResponse = require("../helpers/apiResponse");
+const movieModel = require("../models/MovieModel");
 
-class clsMovie {
+const seat = require("../models/seatsModel")
 
-    async createTicket(req, res) {
+class clsBook {
+
+    async BookTicket(req, res) {
 
         try {
 
             let {
                 seatNo,
-                seatBook,
-                totalPrice,
-                isPayment,
-                isDelete,
+                userId,
+                movieId,
+                // isPayment,
+                showtime,
+                screenNo
             } = req.body;
 
-            let ticketId= "Tickt_" + seatNo +new Date().getTime();
+            let seatId = "Seat_" + seatNo + screenNo;
+            const checkSeat = await seat.findOne({ seatId: { $in: seatId }, isBooked: true });
 
-            let ticketFound = await ticketModel.findOne({ ticketId: ticketId, isDelete: false }).lean();
+            if (checkSeat) {
+                return apiResponse.alreadyExist(res, "Sorry seat ia unavailable", "", "", "");
+            } else {
 
-            if (ticketFound) {
+                let seatAdd = new seat({
+                    seatId: seatId,
+                    seatNo,
+                    movieId,
+                    screenNo,
+                    showtime
+                });
+                console.log("seatAdded", seatAdd)
+                let seatRes = await seatAdd.save();
 
-                return apiResponse.alreadyExist(res, "ticket already exists  ", "", "", "");
+                const seatBook = await seat.updateMany({ seatId: { $in: seatId } }, { isBooked: true })
 
-            }
-            else {
+
+                const movieData = await movieModel.findOne()
+
+
+                let ticketId = "Tickt_" + seatNo + new Date().getTime();
+
 
                 let ticketPost = new ticketModel({
-                    ticketId:ticketId,
+                    ticketId: ticketId,
                     seatNo,
-                    seatBook,
-                    totalPrice,
-                    isPayment,
-                    isDelete,
+                    userId,
+                    movieId,
+                    totalPrice: movieData.moviePrice,
+                    isPayment: true,
+                    showtime,
+                    screenNo
                 });
 
                 let ticketRes = await ticketPost.save();
 
-                return apiResponse.successResponse(res, "ticket created successfully",  ticketRes, "", "");
+                return apiResponse.successResponse(res, "ticket created successfully", ticketRes, "", "");
+
             }
 
         } catch (error) {
@@ -50,195 +72,7 @@ class clsMovie {
 
     }
 
-    async updateMovie(req, res) {
-        try {
-            if (Object.keys(req.body).length) {
-                let {
-                    movieId,
-                    movieTitle,
-                    movieHr,
-                    moviePrice,
-                    movieBannerImg,
-                    showtime,
-                } = req.body;
-
-                const updatedMovie = await movieModel.findOneAndUpdate(
-                    { movieId, isDelete: false },
-                    {
-                        $set: {
-                            movieTitle:String(movieTitle).trim(),
-                            movieHr:String(movieHr).trim(),
-                            moviePrice:String(moviePrice).trim(),
-                            movieBannerImg:String(movieBannerImg).trim(),
-                            showtime:String(showtime).trim(),
-                        }
-                    },
-                    { new: true });
-
-                if (updatedMovie) {
-
-                    return apiResponse.successResponse(res, "Updated Successfully", updatedMovie, "", "");
-                }
-                else {
-
-                    return apiResponse.successNoContentResponse(res, "Data Not Found", "", "", "");
-                }
-            }
-            else {
-                return apiResponse.bodyNotExist(res, "Body Empty", data = null, "", "")
-            }
-        } catch (error) {
-
-            return apiResponse.errorResponse(res, error.message, "", "", error)
-        }
-    }
-
-    async getAllMovieDashboard(req, res) {
-
-        try {
-
-            if (Object.keys(req.body).length) {
-
-                let {
-
-                    documentsPerPage = 10,
-                    page = 1
-
-                } = req.body
-
-                let query = {
-
-                    isDelete: false
-                }
-
-                const docPerPage = parseInt(documentsPerPage);
-                let pageNo = parseInt(page);
-                const skipDocs = (pageNo - 1) * docPerPage;
-
-                let [movieData, movieCount] = await Promise.all(
-                    [
-                        movieModel
-                            .find(query)
-                            .skip(skipDocs)
-                            .limit(docPerPage)
-                            .lean(),
-                            movieModel.countDocuments(query)
-                    ]
-                );
-
-                if (movieData.length > 0) {
-
-                    let responses = {
-                        data: movieData,
-                        count: movieCount,
-                        noOfPages: Math.ceil(movieCount / docPerPage),
-                    };
-
-                    return apiResponse.paginateResponse(res, "Get all Movie Data with Pagination", responses, "", "");
-                }
-                else {
-                    return apiResponse.successNoContentResponse(res, "Data Not Found", "", "", "");
-                }
-            }
-            else {
-                return apiResponse.bodyNotExist(res, "Body Empty", data = null, "", "")
-            }
-        } catch (error) {
-
-            return apiResponse.errorResponse(res, error.message, "", "", error)
-        }
-    }
-
-    async getMovieById(req, res) {
-        try {
-            if (Object.keys(req.body).length) {
-
-                const movie = await movieModel.findOne({ movieId: req.body.movieId, isDelete: false });
-
-                if (movie) {
-
-                    return apiResponse.successResponse(res, "Get movie", movie, "", "");
-
-                } else {
-
-                    return apiResponse.successNoContentResponse(res, "Data Not Found", "", "", "");
-                }
-            } else {
-
-                return apiResponse.bodyNotExist(res, "Body Empty", data = null, "", "")
-            }
-
-
-        } catch (error) {
-
-            return apiResponse.errorResponse(res, error.message, "", "", error)
-        }
-    }
-
-    async getAllMovie(req, res) {
-
-        try {
-            let query = {
-
-                isDelete: false
-            }
-            let MovieData = await movieModel.find(query)
-
-            if (MovieData.length > 0) {
-
-                let responses = {
-
-                    data:MovieData ,
-
-                    count: MovieData.length,
-                };
-
-                return apiResponse.successResponse(res, "Get All Movie", responses, "", "");
-            }
-            else {
-                return apiResponse.successNoContentResponse(res, "Data Not Found", "", "", "");
-            }
-        } catch (error) {
-
-            return apiResponse.errorResponse(res, error.message, "", "", error)
-
-        }
-    }
-
-    async deleteCourse(req, res) {
-        try {
-
-            if (Object.keys(req.body).length) {
-
-                const deletedmovieModel = await movieModel.findOneAndUpdate(
-
-                    { movieId: req.body.movieId, isDelete: false },
-
-                    { $set: { isDelete: true } },
-
-                    { new: true });
-
-                if (deletedmovieModel) {
-
-                    return apiResponse.successResponse(res, "Data deleted succussfully", "", "", "");
-
-                } else {
-
-                    return apiResponse.successNoContentResponse(res, "Data Not Found", "", "", "");
-                }
-            }
-            else {
-
-                return apiResponse.bodyNotExist(res, "Body Empty", data = null, "", "")
-
-            }
-        } catch (error) {
-
-            return apiResponse.errorResponse(res, error.message, "", "", error)
-
-        }
-    }
 
 }
 
-module.exports = clsMovie;
+module.exports = new clsBook();

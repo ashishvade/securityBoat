@@ -346,4 +346,4 @@ class clsUser {
 
 }
 
-module.exports = clsUser;
+module.exports = new clsUser();

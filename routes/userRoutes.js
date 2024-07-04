@@ -11,7 +11,7 @@ const router = express.Router()
 
 
 const clsUser = require("../controllers/userController.js")
-const userObj = new clsUser();
+// const userObj = new clsUser();
 
 passport.serializeUser(function (user, done) {
     done(null, user.id);
@@ -115,13 +115,13 @@ router.post("/login", async (req, res, next) => {
     })(req, res, next);
 });
 
-router.post("/addUser", authJwt.verifyToken, userObj.addUser);
-router.post("/updateUser", authJwt.verifyToken, userObj.updateUser);
-router.post("/getAllUserPGN", authJwt.verifyToken, userObj.getAllUserPGN);
-router.post("/getUserById", authJwt.verifyToken, userObj.getUserById);
-router.post("/getAlluser", authJwt.verifyToken, userObj.getAlluser);
-router.post("/deleteUser", authJwt.verifyToken, userObj.deleteUser);
-router.post("/updatePassword",  authJwt.verifyToken,  userObj.updatePassword);
-// router.post("/setPassword",  authJwt.verifyToken,  userObj.setPassword);
+router.post("/addUser", /* authJwt.verifyToken,  */clsUser.addUser);
+router.post("/updateUser", /* authJwt.verifyToken,  */clsUser.updateUser);
+router.post("/getAllUserPGN", /* authJwt.verifyToken,  */clsUser.getAllUserPGN);
+router.post("/getUserById", /* authJwt.verifyToken,  */clsUser.getUserById);
+router.post("/getAlluser", /* authJwt.verifyToken,  */clsUser.getAlluser);
+router.post("/deleteUser", /* authJwt.verifyToken,  */clsUser.deleteUser);
+router.post("/updatePassword",  /* authJwt.verifyToken,  */ clsUser.updatePassword);
+// router.post("/setPassword",  /* authJwt.verifyToken,  */ userObj.setPassword);
 
 module.exports = router;

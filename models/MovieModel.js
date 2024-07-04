@@ -6,11 +6,13 @@ const MovieSchema = new Schema({
         type: String,
         trim: true
     },
-    showtime:{
-        type: String,
-        enum: ["11", "1", "10"],
-        trim: true
-    },
+    genre: { type: String, required: true,trim:true },
+    showtimes: [
+        {
+          startTime: { type: Date, required: true },
+          endTime: { type: Date, required: true },
+        },
+      ],
     movieTitle:{
         type: String,
         trim: true
