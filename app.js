@@ -74,7 +74,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(cors());
 
 app.use(cors({
-  origin: 'http://localhost:3000', // or your specific origin
+  origin: 'https://ashishmoviebook.netlify.app/', // or your specific origin
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
