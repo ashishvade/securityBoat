@@ -74,9 +74,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use(cors());
 
 app.use(cors({
-  origin: 'https://ashishmoviebook.netlify.app', // or your specific origin
+  origin: ['https://ashishmoviebook.netlify.app',"http://localhost:3000","http://43.205.140.194" ],// or your specific origin
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
+  credentials: true,
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
 }));
 
 app.use('/v1', indexRouter);
