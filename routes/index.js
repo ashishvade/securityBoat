@@ -4,6 +4,7 @@ var router = express.Router();
  const user = require("../routes/userRoutes");
  const movie=require("../routes/movieR")
  const book=require("../routes/bookRoutes")
+ const seat=require("../routes/seatRoutes")
 // const question = require("../routes/questionRoute");
 
 /* GET home page. */
@@ -20,6 +21,7 @@ router.get('/route1', function (req, res, next) {
  router.use("/user", user);
  router.use("/movie", movie);
  router.use("/book", book);
+ router.use("/seat", seat);
 // router.use("/question", question);
 
 module.exports = router;

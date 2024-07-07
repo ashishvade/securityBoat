@@ -124,10 +124,15 @@ class clsseat {
     async getAllseat(req, res) {
 
         try {
-            let query = {
 
-                isDelete: false
+            let { movieId, screenNo}=req.body;
+            let query = {
+                isDelete: false,
+                isBooked:true,
+                movieId: movieId,
+                screenNo:screenNo
             }
+
             let seatData = await seatModel.find(query)
 
             if (seatData.length > 0) {
@@ -187,4 +192,4 @@ class clsseat {
 
 }
 
-module.exports = clsseat;
+module.exports = new clsseat();

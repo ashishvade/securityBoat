@@ -71,7 +71,13 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cors());
+// app.use(cors());
+
+app.use(cors({
+  origin: 'http://localhost:3000', // or your specific origin
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 
 app.use('/v1', indexRouter);
 app.use(function (req, res, next) {
