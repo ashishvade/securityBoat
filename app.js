@@ -79,8 +79,10 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization'],
   exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
   credentials: true,
-  referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
+   referrerPolicy: { policy: 'strict-origin-when-cross-origin' }
 }));
+
+app.options('*', cors());
 
 app.use('/v1', indexRouter);
 app.use(function (req, res, next) {
